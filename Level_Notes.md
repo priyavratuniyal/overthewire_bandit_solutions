@@ -13,3 +13,8 @@ This level requires to login to `bandit1` using the password last level
 Here there is a single file name `-` which is a special symbol in linux, and used for adding flags for specific options to a command.
 
 - `~$ cat ./-` : get the password for bandit2
+
+## Level 1 ---> Level 2
+There is a file called **spaces in this filename**
+
+- `~$ cat "spaces in this filename"`: get the password
