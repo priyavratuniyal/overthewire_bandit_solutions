@@ -49,7 +49,7 @@ bandit4@bandit:~/inhere$ file ./*
 - `~$ cat ./-file07`
 
 
-## Level 5 ---> Level 6
+## Level 5 ---> Level 6:
 We want a file with:
 - human-readable
 - 1033 bytes in size
@@ -60,7 +60,7 @@ We want a file with:
 Extra: `~$ file */{.,}* | grep "ASCII text" | grep -v "with very long lines"`: this helps to filter out all the files of type ASCII text
 
 
-## Level 6 ---> Level 7
+## Level 6 ---> Level 7:
 We want a file with:
 - owned by user bandit7
 - owned by group bandit6
@@ -77,3 +77,6 @@ So we can dump all the errors using 2>/dev/null
 This will give us a file like this:
 
 `./var/lib/dpkg/info/bandit7.password`
+
+## Level 7 ---> Level 8:
+We just have to use: `~$ grep "millionth" data.txt`
