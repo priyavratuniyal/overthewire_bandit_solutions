@@ -80,3 +80,10 @@ This will give us a file like this:
 
 ## Level 7 ---> Level 8:
 We just have to use: `~$ grep "millionth" data.txt`
+
+## Level 8 ---> Level 9:
+The file **data.txt** contains the password, which is the only one which occur only once in the file
+
+We need to sort the contents first, as 'uniq' command only works for adjacent duplicates.
+
+`~$ sort data.txt | uniq -u` gives you the unique test
