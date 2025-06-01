@@ -76,7 +76,9 @@ So we can dump all the errors using 2>/dev/null
 
 This will give us a file like this:
 
-`./var/lib/dpkg/info/bandit7.password`
+```
+./var/lib/dpkg/info/bandit7.password
+```
 
 ## Level 7 ---> Level 8:
 We just have to use: `~$ grep "millionth" data.txt`
@@ -87,3 +89,17 @@ The file **data.txt** contains the password, which is the only one which occur o
 We need to sort the contents first, as 'uniq' command only works for adjacent duplicates.
 
 `~$ sort data.txt | uniq -u` gives you the unique test
+
+## Level 9 ---> Level 10:
+We are going to use the 'strings' command to find the human readable string in the **data.txt** file.
+
+`~$ strings data.txt | grep ===`
+
+The result is something like this:
+```
+bandit9@bandit:~$ strings data.txt | grep ===*
+========== the
+========== password{k
+=========== is
+========== FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
+```
