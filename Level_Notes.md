@@ -103,3 +103,8 @@ bandit9@bandit:~$ strings data.txt | grep ===*
 =========== is
 ========== FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
 ```
+
+## Level 10 ---> Level 11:
+The password for the next level is stored in the file data.txt, which contains base64 encoded data
+
+`~$ base64 --decode data.txt`: get the password
