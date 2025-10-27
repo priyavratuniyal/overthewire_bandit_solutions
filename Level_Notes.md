@@ -16,9 +16,9 @@ Here there is a single file name `-` which is a special symbol in linux, and use
 - `~$ cat ./-` : get the password for bandit2
 
 ## Level 2 ---> Level 3:
-There is a file called **spaces in this filename**
+There is a file called **--spaces in this filename--**
 
-- `~$ cat "spaces in this filename"`: get the password
+- `~$ cat ./"--spaces in this filename--"`: get the password
 
 
 ## Level 3 ---> Level 4:
