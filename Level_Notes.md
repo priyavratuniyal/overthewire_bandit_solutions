@@ -108,3 +108,216 @@ bandit9@bandit:~$ strings data.txt | grep ===*
 The password for the next level is stored in the file data.txt, which contains base64 encoded data
 
 `~$ base64 --decode data.txt`: get the password
+
+## Level 11 ---> Level 12:
+The password for the next level is stored in the file data.txt where all the uppercase and lowercase characters are rotated by 13 position.
+
+We'll be using `tr` command for this. `tr` stands for translate.
+
+`~$ tr 'A-Za-z' 'N-ZA-Mn-za-m' < data.txt` : gives us the password
+
+```
+bandit11@bandit:~$ cat data.txt
+Gur cnffjbeq vf 7k16JArUVv5LxVuJfsSVdbbtaHGlw9D4
+
+bandit11@bandit:~$ tr 'A-Za-z' 'N-ZA-Mn-za-m' < data.txt
+The password is 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
+```
+
+_Note: Look carefully, the digits are the same only the alphabets are rotated. This is because for digits, we use something like ROT5 ciper, while the ROT13 ciper works on latin alphabet._
+
+## Level 12 ---> Level 13:
+This is an interesting level.
+
+There is a __data.txt__ file with the password. It is actually the hex-dump of a file that is compressed multiple times.
+
+```
+�hȔ'�7<bandit12@bandit:~$ ls -ls
+total 4
+4 -rw-r----- 1 bandit13 bandit12 2581 Oct 14 09:26 data.txt
+
+bandit12@bandit:~$ xxd -r data.txt
+�h�@щ��AFM�@ё�h���h��2�i���&�������#C�40�h����hh�hhh�L�M���0�� 2h��h4b4�hi��z�@�����4
+                                                                  �d��h`5A,���{�G��i0�P��d�@1/KȰ
+                                                                                                �l�ת3j폻{�?�DX�N����a.�'������-hf��'Tu�9
+                                                                                                                                        ��x(F����C��9z��#*ڛ�M�]J��2䔮�'�0�S<f�`��Fp�2+qt��R��
+&{qe �w��"�35OƎ����Z
+�hȔ'�7<
+
+bandit12@bandit:~$ 
+```
+
+We can see this in the binary form now.
+
+The level suggests us to make a temp directory using `mktemp -d` and copying our __data.txt__ file there, because it's easier to work with one, as it would involve extracting files many times.
+
+```
+bandit12@bandit:~$ mktemp -d
+/tmp/tmp.dZ6dtZJKkp
+
+bandit12@bandit:~$ cd /tmp/tmp.dZ6dtZJKkp
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ cp ~/data.txt .
+```
+
+
+```
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -l
+total 8
+-rw-r----- 1 bandit12 bandit12 2581 Oct 29 04:33 data.txt
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ cat data.txt | head
+00000000: 1f8b 0808 2817 ee68 0203 6461 7461 322e  ....(..h..data2.
+00000010: 6269 6e00 013c 02c3 fd42 5a68 3931 4159  bin..<...BZh91AY
+00000020: 2653 59cc 46b5 2d00 0018 ffff da5f e6e3  &SY.F.-......_..
+00000030: 9fcd f59d bc69 ddd7 f7ff a7e7 dbdd b59f  .....i..........
+00000040: fff7 cfdd ffbf bbdf ffff ff5e b001 3b58  ...........^..;X
+00000050: 2406 8000 00d0 6834 6234 d000 6869 9000  $.....h4b4..hi..
+00000060: 1a7a 8003 40d0 01a1 a006 8188 340d 1a68  .z..@.......4..h
+00000070: d340 d189 e906 8f41 0346 4d94 40d1 91a0  .@.....A.FM.@...
+00000080: 681a 0681 a068 0680 c400 3207 a269 a189  h....h....2..i..
+00000090: a326 8000 c800 c81a 1883 1000 00d0 c023  .&.............#
+```
+
+Cool __data.txt__ is actually a hex dump.
+
+Trick is, we rename the file to something without extentsion. Why? because when we convert the hex-dump to binary again, we don't want to presume the file type.
+
+
+```
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ mv data.txt hexdump_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ file hexdump_data 
+hexdump_data: ASCII text
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ xxd -r hexdump_data compressed_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -l
+total 8
+-rw-rw-r-- 1 bandit12 bandit12  605 Oct 29 04:35 compressed_data
+-rw-r----- 1 bandit12 bandit12 2581 Oct 29 04:33 hexdump_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ file compressed_data 
+compressed_data: gzip compressed data, was "data2.bin", last modified: Tue Oct 14 09:26:00 2025, max compression, from Unix, original size modulo 2^32 572
+```
+
+See, the new __compressed_data__ file is not a text file in itself. It is a gzip file (i.e. a file that is compressed by the gzip algo)
+
+Now here's a main issue with `.gz` type file. For decompression, you need to rename it.
+
+But for files `.bz` or `.tar` it is not the issue, and we can decompress them as is.
+
+From now on, we'll try to decompress the files __(using different algos as per the file type)__ until we get the password.
+```
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ mv compressed_data compressed_data.gz
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ gzip -d compressed_data.gz 
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -l
+total 8
+-rw-rw-r-- 1 bandit12 bandit12  572 Oct 29 04:35 compressed_data
+-rw-r----- 1 bandit12 bandit12 2581 Oct 29 04:33 hexdump_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ file compressed_data 
+compressed_data: bzip2 compressed data, block size = 900k
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ mv compressed_data compressed_data.bz
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -ltr
+total 8
+-rw-r----- 1 bandit12 bandit12 2581 Oct 29 04:33 hexdump_data
+-rw-rw-r-- 1 bandit12 bandit12  572 Oct 29 04:35 compressed_data.bz
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ bzip2 compressed_data.bz -d
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -l
+total 8
+-rw-rw-r-- 1 bandit12 bandit12  434 Oct 29 04:35 compressed_data
+-rw-r----- 1 bandit12 bandit12 2581 Oct 29 04:33 hexdump_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ file compressed_data 
+compressed_data: gzip compressed data, was "data4.bin", last modified: Tue Oct 14 09:26:00 2025, max compression, from Unix, original size modulo 2^32 20480
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ mv compressed_data compressed_data.gz
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ gzip -d compressed_data.gz 
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -l
+total 24
+-rw-rw-r-- 1 bandit12 bandit12 20480 Oct 29 04:35 compressed_data
+-rw-r----- 1 bandit12 bandit12  2581 Oct 29 04:33 hexdump_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ file compressed_data 
+compressed_data: POSIX tar archive (GNU)
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ tar xvf compressed_data
+data5.bin
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -l
+total 36
+-rw-rw-r-- 1 bandit12 bandit12 20480 Oct 29 04:35 compressed_data
+-rw-r--r-- 1 bandit12 bandit12 10240 Oct 14 09:26 data5.bin
+-rw-r----- 1 bandit12 bandit12  2581 Oct 29 04:33 hexdump_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ file data5.bin 
+data5.bin: POSIX tar archive (GNU)
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ mv data5.bin data5.bin
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ tar xvf data5.bin data6.bin
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -l
+total 40
+-rw-rw-r-- 1 bandit12 bandit12 20480 Oct 29 04:35 compressed_data
+-rw-r--r-- 1 bandit12 bandit12 10240 Oct 14 09:26 data5.bin
+-rw-r--r-- 1 bandit12 bandit12   219 Oct 14 09:26 data6.bin
+-rw-r----- 1 bandit12 bandit12  2581 Oct 29 04:33 hexdump_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ file data6.bin 
+data6.bin: bzip2 compressed data, block size = 900k
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ bzip2 data6.bin -d
+bzip2: Can't guess original name for data6.bin -- using data6.bin.out
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -l
+total 48
+-rw-rw-r-- 1 bandit12 bandit12 20480 Oct 29 04:35 compressed_data
+-rw-r--r-- 1 bandit12 bandit12 10240 Oct 14 09:26 data5.bin
+-rw-r--r-- 1 bandit12 bandit12 10240 Oct 14 09:26 data6.bin.out
+-rw-r----- 1 bandit12 bandit12  2581 Oct 29 04:33 hexdump_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ file data6.bin.out 
+data6.bin.out: POSIX tar archive (GNU)
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ tar xvf data6.bin.out
+data8.bin
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -l
+total 52
+-rw-rw-r-- 1 bandit12 bandit12 20480 Oct 29 04:35 compressed_data
+-rw-r--r-- 1 bandit12 bandit12 10240 Oct 14 09:26 data5.bin
+-rw-r--r-- 1 bandit12 bandit12 10240 Oct 14 09:26 data6.bin.out
+-rw-r--r-- 1 bandit12 bandit12    79 Oct 14 09:26 data8.bin
+-rw-r----- 1 bandit12 bandit12  2581 Oct 29 04:33 hexdump_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ file data8.bin 
+data8.bin: gzip compressed data, was "data9.bin", last modified: Tue Oct 14 09:26:00 2025, max compression, from Unix, original size modulo 2^32 49
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ mv data8.bin data8.bin.gz
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ gzip -d data8.bin.gz 
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ ls -l
+total 52
+-rw-rw-r-- 1 bandit12 bandit12 20480 Oct 29 04:35 compressed_data
+-rw-r--r-- 1 bandit12 bandit12 10240 Oct 14 09:26 data5.bin
+-rw-r--r-- 1 bandit12 bandit12 10240 Oct 14 09:26 data6.bin.out
+-rw-r--r-- 1 bandit12 bandit12    49 Oct 14 09:26 data8.bin
+-rw-r----- 1 bandit12 bandit12  2581 Oct 29 04:33 hexdump_data
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ file data8.bin 
+data8.bin: ASCII text
+
+bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ cat data8.bin | head
+The password is FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn
+```
