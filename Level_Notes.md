@@ -321,3 +321,50 @@ data8.bin: ASCII text
 bandit12@bandit:/tmp/tmp.dZ6dtZJKkp$ cat data8.bin | head
 The password is FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn
 ```
+
+
+## Level 13 ---> Level 14
+The password for the next level is stored in /etc/bandit_pass/bandit14 and can only be read by user bandit14.
+
+So this level doesn't have any password.
+
+It does have a private key though. Which means I can login to `bandit14` level just by using that ssh-key.
+
+Issue is, that the key is right now in `bandit13` so we need to copy it to our machine using `scp`
+
+```
+priyavrat@New-Bro-ThinkPad-P16v:~/Downloads$ scp -P 2220 bandit13@bandit.labs.overthewire.org:sshkey.private .
+                         _                     _ _ _   
+                        | |__   __ _ _ __   __| (_) |_ 
+                        | '_ \ / _` | '_ \ / _` | | __|
+                        | |_) | (_| | | | | (_| | | |_ 
+                        |_.__/ \__,_|_| |_|\__,_|_|\__|
+                                                       
+
+                      This is an OverTheWire game server. 
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-0
+bandit13@bandit.labs.overthewire.org's password: 
+sshkey.private                                                                                100% 1679     2.8KB/s   00:00    
+priyavrat@personal-pc:~/Downloads$ ls -ltr
+total 1296
+-rwx------ 1 priyavrat priyavrat    1679 Oct 29 22:55 sshkey.private
+```
+
+So now we have the private key so let's use that to ssh login into bandit14.
+
+But before let's change the permission, to reduce them a bit using `chmod 700`.
+
+```
+priyavrat@personal-pc:~/Downloads$ chmod 700 sshkey.private 
+priyavrat@personal-pc:~/Downloads$ ssh -i sshkey.private bandit14@bandit.labs.overthewire.org -p 2220
+                      
+                      This is an OverTheWire game server.
+bandit14@bandit:~$ 
+
+```
+
+Cool, we're in!
+
+## Level 14 ---> Level 15
