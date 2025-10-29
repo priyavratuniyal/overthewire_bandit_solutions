@@ -368,3 +368,21 @@ bandit14@bandit:~$
 Cool, we're in!
 
 ## Level 14 ---> Level 15
+The password for the next level can be retrieved by submitting the password of the current level to port 30000 on localhost.
+
+Now we are entering in the nterworking zone slowly.
+
+So here we'll use `nc` (netcat) command to do this.
+
+```
+bandit14@bandit:~$ cat /etc/bandit_pass/bandit14 | nc 127.0.0.1 30000
+Correct!
+8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
+```
+
+By the way, `bandit14`'s password is simply by doing:
+
+```
+bandit14@bandit:~$ cat /etc/bandit_pass/bandit14
+MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
+```
