@@ -386,3 +386,25 @@ By the way, `bandit14`'s password is simply by doing:
 bandit14@bandit:~$ cat /etc/bandit_pass/bandit14
 MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
 ```
+
+## Level 15 ---> Level 16
+The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL/TLS encryption.
+
+So, for this level I learned about SSL (Secure socket layer) and TLS(Transport Layer Security) and `sym` and `asym` encryption, and why do we need `certificates`. (refer Man-in-middle attacks)
+
+[YT video on SSL Certificate](https://www.youtube.com/watch?v=0yw-z6f7Mb4&pp=ygUHc3NsIHRscw%3D%3D)
+
+So, earlier I thought, I have to encrypt a password using `openssl` and then I can just send it over to the localhost on port 30001. But then I realised that I have to open a secure connection instead and then send the password over it to the host and the port.
+
+Here's how it's done:
+
+```
+bandit15@bandit:~$ openssl s_client -connect 127.0.0.1:30001
+...
+
+8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
+Correct!
+kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
+
+closed
+```
