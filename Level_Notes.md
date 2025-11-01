@@ -408,3 +408,57 @@ kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
 
 closed
 ```
+
+## Level 16 ---> Level 17
+Getting the password on this level is a bit tricky. Not in terms of the actual solution, but in general figuring out the unexpected errors (that shouldn't have been part of the game).
+
+We have to find a (single) port in the range 31000-32000 that has SSL/TLS encryption and is not 'just echoing what I say to it'.
+
+For that requirement, we have `nmap`.
+
+```
+bandit16@bandit:~$ nmap -sV -p 31000-32000 localhost
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-11-01 07:20 UTC
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00016s latency).
+Not shown: 996 closed tcp ports (conn-refused)
+PORT      STATE SERVICE     VERSION
+31046/tcp open  echo
+31518/tcp open  ssl/echo
+31691/tcp open  echo
+31790/tcp open  ssl/unknown
+31960/tcp open  echo
+```
+
+We can see that only one port `31790` fullfil our requirement.
+
+```
+bandit16@bandit:~$ mktemp -d
+/tmp/tmp.dZ6dtZJKkp
+bandit16@bandit:~$ cd /tmp/tmp.dZ6dtZJKkp
+bandit16@bandit:/tmp/tmp.dZ6dtZJKkp$ openssl s_client -ign_eof localhost:31790 > output
+....
+
+<entered the pass of level 16>
+
+....
+
+<got the private key for level 17 :) >
+```
+
+The private key would look something like this:
+
+```
+-----BEGIN RSA PRIVATE KEY-----
+
+<content of the key>
+
+-----END RSA PRIVATE KEY-----
+
+```
+
+Now just like in `Level 13 --> 14` where we copied the private file to our own system, we would copy this `output` file, extract the private key and use it with `ssh` to login to `bandit17`.
+
+__NOTE__: There exists an issue, where you have to add a new-line `\n` at the end of the private key.
+
+_Link to the issue_: [Load key "...": error in libcrypto](https://maxrohde.com/2025/08/16/fix-error-in-libcrypto-error-reading-private-ssh-key/#:~:text=I%20simply%20needed%20to%20add%20a%20newline,loading%20ssh%20key%20from%20an%20environment%20variable.)
