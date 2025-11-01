@@ -485,3 +485,40 @@ bandit17@bandit:~$ diff -d passwords.old passwords.new
 ```
 
 The __latter__ is our password for level 18.
+
+## Leve 18 ---> Level 19
+The password for the next level is stored in a file readme in the homedirectory. Unfortunately, someone has modified .bashrc to log you out when you log in with SSH.
+
+So, when we login, we can't stay there, it auto logout us.
+
+What we can do though is copying the readme file to our local.
+
+```
+priyavrat@New-Bro-ThinkPad-P16v:~$ scp -P 2220 bandit18@bandit.labs.overthewire.org:readme .
+....
+
+                      This is an OverTheWire game server. 
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-0
+bandit18@bandit.labs.overthewire.org's password: 
+readme                                                                                                                                                      100%   33     0.1KB/s   00:00    
+
+```
+Cool, we got the file, we need to just open it, and there's our password for the next level :)
+
+__NOTE__: Alternate way of doing this is, and I didn't knew this, I saw someone else's solution. You can execute commands with `ssh`.
+
+```
+priyavrat@New-Bro-ThinkPad-P16v:~$ ssh -p 2220 bandit18@bandit.labs.overthewire.org cat readme
+                    
+....
+
+                      This is an OverTheWire game server. 
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-0
+bandit18@bandit.labs.overthewire.org's password: 
+cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8
+
+```
