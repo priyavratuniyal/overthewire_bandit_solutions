@@ -462,3 +462,26 @@ Now just like in `Level 13 --> 14` where we copied the private file to our own s
 __NOTE__: There exists an issue, where you have to add a new-line `\n` at the end of the private key.
 
 _Link to the issue_: [Load key "...": error in libcrypto](https://maxrohde.com/2025/08/16/fix-error-in-libcrypto-error-reading-private-ssh-key/#:~:text=I%20simply%20needed%20to%20add%20a%20newline,loading%20ssh%20key%20from%20an%20environment%20variable.)
+
+
+## Level 17 ---> Level 18
+This is a rather simple level. We need to find the password by finding the difference between the two files in home directory.
+
+```
+bandit17@bandit:~$ ls -ltr
+total 8
+-rw-r----- 1 bandit18 bandit17 3300 Oct 14 09:26 passwords.old
+-rw-r----- 1 bandit18 bandit17 3300 Oct 14 09:26 passwords.new
+
+bandit17@bandit:~$ diff -q passwords.old passwords.new 
+Files passwords.old and passwords.new differ
+
+bandit17@bandit:~$ diff -d passwords.old passwords.new 
+42c42
+< BMIOFKM7CRSLI97voLp3TD80NAq5exxk
+---
+> x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO
+
+```
+
+The __latter__ is our password for level 18.
