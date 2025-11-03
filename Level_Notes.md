@@ -522,3 +522,32 @@ bandit18@bandit.labs.overthewire.org's password:
 cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8
 
 ```
+
+## Level 19 ---> Level 20
+To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place (/etc/bandit_pass), after you have used the setuid binary.
+
+__Theory__:
+1. First `-` tells us this is a file. `d` for directory
+2. First `---` tell us the permission i.e. read|write|execute for the __user__.
+3. Second `---` tells perms for the __group__.
+4. Third `---` tells perms for __all others__.
+
+The perms can be changed by using `chmod` command.
+
+So basically, `setuid` allows a user to run a program/command like the root user.
+For groups, `setgrp` is the alternative.
+
+See closely below, the __execute permission__ is replaced by `s` which tells us that the file can be executed as root user.
+
+```
+bandit19@bandit:~$ ls -ltr
+total 16
+-rwsr-x--- 1 bandit20 bandit19 14884 Oct 14 09:26 bandit20-do
+```
+
+So to find, we can just use the above command, and use it to open the bandit20 password file.
+
+```
+bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
+0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+```
