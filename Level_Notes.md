@@ -551,3 +551,41 @@ So to find, we can just use the above command, and use it to open the bandit20 p
 bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
 0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
 ```
+
+
+## Level 20 ---> Level 21
+There is a setuid binary in the homedirectory that does the following: it makes a connection to localhost on the port you specify as a commandline argument. It then reads a line of text from the connection and compares it to the password in the previous level (bandit20). If the password is correct, it will transmit the password for the next level (bandit21).
+
+For this, we can use the `nc` (netcat) command to start a local server on a port.
+```
+bandit20@bandit:~$ nc -l 8080
+```
+
+Then open another terminal window in the same level and open the binary present.
+
+```
+bandit20@bandit:~$ ./suconnect 8080
+```
+
+Now just send the present level password to the `nc` server from ___Terminal 1___ via copy-pasting it in the current session.
+```
+bandit20@bandit:~$ nc -l 8080
+0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+```
+
+We will get the password for the next level from ___Terminal 2___
+
+```
+bandit20@bandit:~$ ./suconnect 8080
+Read: 0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+Password matches, sending next password
+```
+
+```
+bandit20@bandit:~$ nc -l 8080
+0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+EeoULMCra2q0dSkYj561DX7s1CpBuOBt
+```
+
+### A Better way to do this? `tmux`
+`tmux` is a much better way to do this, where you don't have to open different terminal windows, rather you can just use `tmux`.
