@@ -589,3 +589,49 @@ EeoULMCra2q0dSkYj561DX7s1CpBuOBt
 
 ### A Better way to do this? `tmux`
 `tmux` is a much better way to do this, where you don't have to open different terminal windows, rather you can just use `tmux`.
+
+
+## Level 21 ---> Level 22
+A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+
+```
+bandit21@bandit:~$ cd /etc/cron.d
+
+bandit21@bandit:/etc/cron.d$ ls -ltr
+total 40
+-rw-r--r-- 1 root root 396 Jan  9  2024 sysstat
+-rw-r--r-- 1 root root 201 Apr  8  2024 e2scrub_all
+-rw-r--r-- 1 root root 123 Oct 14 09:19 clean_tmp
+-rw-r--r-- 1 root root 120 Oct 14 09:26 cronjob_bandit22
+-rw-r--r-- 1 root root 122 Oct 14 09:26 cronjob_bandit23
+-rw-r--r-- 1 root root 120 Oct 14 09:26 cronjob_bandit24
+-r--r----- 1 root root  47 Oct 14 09:26 behemoth4_cleanup
+-r--r----- 1 root root  48 Oct 14 09:27 leviathan5_cleanup
+-rw------- 1 root root 138 Oct 14 09:28 manpage3_resetpw_job
+-rwx------ 1 root root  52 Oct 14 09:29 otw-tmp-dir
+
+bandit21@bandit:/etc/cron.d$ cat cronjob_bandit22
+@reboot bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+
+bandit21@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit22.sh
+#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+
+bandit21@bandit:/etc/cron.d$ ls -l /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+-rw-r--r-- 1 bandit22 bandit22 33 Nov  5 14:06 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+
+bandit21@bandit:/etc/cron.d$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q
+```
+
+Explaining what happened above?
+
+So as suggested I moved to the `/etc/cron.d/` directory. I can see that filnames like `cronjob_bandit <number>` have __read__ permissions.
+
+I opened the `cronjob_bandit22` file, saw that it runs every minute; every day. Now what I can see is, it is executing a `.sh` file.
+
+I opened the `/usr/bin/cronjob_bandit22.sh` and see that it is changing the persmission of a file, and writing password for __bandit22__ in it.
+
+Looking at the permission of the temporary file, I can see that everyone can open it. When opened it gives the password for __level 22__.
