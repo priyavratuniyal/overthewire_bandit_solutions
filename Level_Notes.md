@@ -635,3 +635,46 @@ I opened the `cronjob_bandit22` file, saw that it runs every minute; every day. 
 I opened the `/usr/bin/cronjob_bandit22.sh` and see that it is changing the persmission of a file, and writing password for __bandit22__ in it.
 
 Looking at the permission of the temporary file, I can see that everyone can open it. When opened it gives the password for __level 22__.
+
+## Level 22 ---> Level 23
+ program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+
+ Very similar to the previous level, just the difference is, that we need to look into the `.sh` file to see what is it doing?
+
+```
+bandit22@bandit:~$ cd /etc/cron.d
+
+bandit22@bandit:/etc/cron.d$ ls -ls | grep "bandit"
+4 -rw-r--r-- 1 root root 120 Oct 14 09:26 cronjob_bandit22
+4 -rw-r--r-- 1 root root 122 Oct 14 09:26 cronjob_bandit23
+4 -rw-r--r-- 1 root root 120 Oct 14 09:26 cronjob_bandit24
+
+bandit22@bandit:/etc/cron.d$ cat cronjob_bandit23
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+
+bandit22@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit23.sh
+#!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+```
+
+So as we see we need to supply the `bandit23` username to kinda get the location/name of the file which the cron job is writing the password to.
+
+___NOTE___: This is just a problem which you look a little bit into, i.e. not that hard, just that spend a little more time and you'll get the way to do it :)
+
+```
+bandit22@bandit:/etc/cron.d$ /usr/bin/cronjob_bandit23.sh
+Copying passwordfile /etc/bandit_pass/bandit22 to /tmp/8169b67bd894ddbb4412f91573b38db3
+
+bandit22@bandit:/etc/cron.d$ exec echo I am user bandit23 | md5sum | cut -d ' ' -f 1
+8ca319486bfbbc3663ea0fbe81326349
+
+bandit22@bandit:/etc/cron.d$ cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+0Zf11ioIjMVN551jX3CmStKLYqjk54Ga
+```
