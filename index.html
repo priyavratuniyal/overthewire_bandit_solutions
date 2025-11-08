@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bandit • solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <h1 class="site-title">bandit <span class="dot">•</span> solutions <span class="dot">•</span> overthewire</h1>
+        </div>
+        <nav class="header-right">
+            <a href="#" class="nav-link" id="about-link">about</a>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar" id="toc">
+            <div class="sidebar-header">
+                <h3>levels</h3>
+                <button class="toggle-sidebar" aria-label="Toggle sidebar">☰</button>
+            </div>
+            <nav class="toc-list" id="toc-list">
+                <div class="loading">loading levels...</div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <article class="content-pane" id="content">
+                <div class="welcome">
+                    <h2>welcome</h2>
+                    <p>Select a level from the sidebar to view the walkthrough.</p>
+                    <p class="muted">Use <kbd>j</kbd>/<kbd>k</kbd> or arrow keys to navigate levels.</p>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>no secrets published. learn responsibly.</p>
+    </footer>
+
+    <!-- About Modal -->
+    <div class="modal" id="about-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h2>about</h2>
+            <p>Personal writeups for OverTheWire Bandit wargame challenges. These notes focus on methodology and learning — all passwords and sensitive outputs are redacted.</p>
+            <p class="muted">Built as a minimal static site for quick reference and study.</p>
+        </div>
+    </div>
+
+    <!-- Consent Modal -->
+    <div class="modal" id="consent-modal">
+        <div class="modal-content consent-content">
+            <h2>_level_consent_</h2>
+            <p class="consent-message" id="consent-message">To view this walkthrough, please confirm you've attempted the previous level.</p>
+            
+            <div class="consent-form">
+                <label for="consent-input" class="consent-label">type to confirm:</label>
+                <input 
+                    type="text" 
+                    id="consent-input" 
+                    class="consent-input" 
+                    placeholder="I have cleared level X and want to see level Y"
+                    autocomplete="off"
+                    spellcheck="false"
+                />
+                <div class="consent-actions">
+                    <button class="consent-btn consent-cancel" id="consent-cancel">cancel</button>
+                    <button class="consent-btn consent-confirm" id="consent-confirm" disabled>unlock</button>
+                </div>
+                <p class="consent-note">This is an honor system. Please attempt each level before viewing solutions.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.0.0/marked.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
