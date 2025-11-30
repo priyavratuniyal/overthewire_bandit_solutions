@@ -776,3 +776,22 @@ ___NOTE___: The level says _'You do not need to create new connections each time
 How do we achieve this?
 
 By passing all the combinations to the `nc` connection all at once, and then noting it into a file.
+
+## Level 25 ---> Level 26
+This is a wierd level. This basically needs you to ssh into `bandit26` which in turn would exit the ssh. So, you need to try a **hack**, that is, minimizing the terminal size so as to go into command mode in `more` from where you can switch to `vim` and execute some commands.
+
+Here how it goes:
+- copy the private key to your own system
+- use it to `ssh` into __bandit26__
+- minimize while ssh-ing
+- type `v` to switch over to __vim__
+- type `:e /etc/bandit_pass/bandit26` to get the password for **bandit26**
+
+## Level 26 --> Level 27
+You have to continue from the previous `vim` command mode, and do something like `:set shell=/bin/bash` so that you can use bash as you shell instead of the custom 'notext' something shell.
+
+Now do, `:shell` and you'd see the bash shell.
+
+Here's a file, __bandit27-do__, and you'd see that the run permission of this file is special becuase it is something like this `-rws` for __bandit27__ user. 
+
+Use this to find the password like this: `./bandit27-do cat /etc/bandit_pass/bandit27`
