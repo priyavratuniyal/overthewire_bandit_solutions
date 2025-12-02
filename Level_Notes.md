@@ -795,3 +795,39 @@ Now do, `:shell` and you'd see the bash shell.
 Here's a file, __bandit27-do__, and you'd see that the run permission of this file is special becuase it is something like this `-rws` for __bandit27__ user. 
 
 Use this to find the password like this: `./bandit27-do cat /etc/bandit_pass/bandit27`
+
+## Level 27 --> Level 28
+This level was rather simple, you just need to find out how to use the git url and clone the repo with the mentioned port.
+
+```
+priyavrat@bruno34:~$ cd /tmp/tmp.920atZ5XdD
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD$ git 
+clone ssh://bandit27-git@bandit.labs.overthewire.org:2220/home/bandit27-git/repo
+Cloning into 'repo'...                       
+
+                      This is an OverTheWire game server. 
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-1
+bandit27-git@bandit.labs.overthewire.org's password: 
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Receiving objects: 100% (3/3), done.
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD$ ls -ltr
+total 4
+drwxrwxr-x 3 priyavrat priyavrat 4096 Dec  2 19:53 repo
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD$ cd repo/
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ ls -ltr
+total 4
+-rw-rw-r-- 1 priyavrat priyavrat 68 Dec  2 19:53 README
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ cat README 
+The password to the next level is: Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN
+
+```
