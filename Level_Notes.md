@@ -831,3 +831,62 @@ priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ cat README
 The password to the next level is: Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN
 
 ```
+
+
+## Level 28 --> Level 29
+We need two commands here, `git log` and `git show [commit_id]`.
+
+When you see the file we can see their is password, and then you see the git logs, then you can see a weird commit. Open that and you'll see that password.
+
+```
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ cat README.md 
+# Bandit Notes
+Some notes for level29 of bandit.
+
+## credentials
+
+- username: bandit29
+- password: xxxxxxxxxx
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ ls -ltr
+total 4
+-rw-rw-r-- 1 priyavrat priyavrat 111 Dec  2 19:58 README.md
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ git log
+commit b5ed4b5a3499533c2611217c8780e8ead48609f6 (HEAD -> master, origin/master, origin/HEAD)
+Author: Morla Porla <morla@overthewire.org>
+Date:   Tue Oct 14 09:26:24 2025 +0000
+
+    fix info leak
+
+commit 8b7c651b37ce7a94633b7b7b7c980ded19a16e4f
+Author: Morla Porla <morla@overthewire.org>
+Date:   Tue Oct 14 09:26:24 2025 +0000
+
+    add missing data
+
+commit 6d8e5e607602b597ade7504a550a29ba03f2cca0
+Author: Ben Dover <noone@overthewire.org>
+Date:   Tue Oct 14 09:26:24 2025 +0000
+
+    initial commit of README.md
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ git show 8b7c651b37ce7a94633b7b7b7c980ded19a16e4f
+commit 8b7c651b37ce7a94633b7b7b7c980ded19a16e4f
+Author: Morla Porla <morla@overthewire.org>
+Date:   Tue Oct 14 09:26:24 2025 +0000
+
+    add missing data
+
+diff --git a/README.md b/README.md
+index 7ba2d2f..d4e3b74 100644
+--- a/README.md
++++ b/README.md
+@@ -4,5 +4,5 @@ Some notes for level29 of bandit.
+ ## credentials
+ 
+ - username: bandit29
+-- password: <TBD>
++- password: 4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7
+
+```
