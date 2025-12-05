@@ -890,3 +890,44 @@ index 7ba2d2f..d4e3b74 100644
 +- password: 4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7
 
 ```
+
+## Level 29 --> Level 30
+This level includes the concept of possiblity of different branches to a repo. In one of the repos you will find the password.
+
+```
+priyavrat@bruno34:~$ cd /tmp/tmp.ApQMbeTl8J
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J$ ls -ltra
+total 20
+drwxrwxrwt 21 root      root      12288 Dec  5 15:26 ..
+drwx------  3 priyavrat priyavrat  4096 Dec  5 15:26 .
+drwxrwxr-x  5 priyavrat priyavrat  4096 Dec  5 15:28 repo
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J$ cd repo
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git branch -a
+* (HEAD detached at origin/dev)
+  master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/dev
+  remotes/origin/master
+  remotes/origin/sploits-dev
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git checkout origin/dev
+HEAD is now at e50e6cc add data needed for development
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ ls -ltr
+total 12
+-rw-rw-r-- 1 priyavrat priyavrat  134 Dec  5 15:28 README.md
+drwxrwxr-x 2 priyavrat priyavrat 4096 Dec  5 15:28 exploits
+drwxrwxr-x 2 priyavrat priyavrat 4096 Dec  5 15:28 code
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ cat README.md 
+# Bandit Notes
+Some notes for bandit30 of bandit.
+
+## credentials
+
+- username: bandit30
+- password: qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL
+```
