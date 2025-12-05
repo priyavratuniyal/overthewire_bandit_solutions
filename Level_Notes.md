@@ -931,3 +931,29 @@ Some notes for bandit30 of bandit.
 - username: bandit30
 - password: qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL
 ```
+
+## Level 30 --> Level 31
+This one contains concept of git __'tags'__
+
+```
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git branch
+* master
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git branch -a
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git log
+commit d604df2303c973b8e0565c60e4c29d3801445299 (HEAD -> master, origin/master, origin/HEAD)
+Author: Ben Dover <noone@overthewire.org>
+Date:   Tue Oct 14 09:26:28 2025 +0000
+
+    initial commit of README.md
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git tag
+secret
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git show secret
+fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy
+```
