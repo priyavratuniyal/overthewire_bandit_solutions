@@ -1070,3 +1070,20 @@ tQdtbs5D5i2vJwkO8mEyYEyTL8izoeJ0
 ```
 
 __NOTE__: Another fantastics hack is to press `ctrl+C`, you'd go the script internal (in the binary form), and then `ctrl+C` again and you get to the native `/bin/bash` shell again.
+
+
+## Level 33 --> Level 34 (Yeesss, we kinda completed the game for now!)
+```
+bandit33@bandit:~$ ls -ltr
+total 4
+-rw------- 1 bandit33 bandit33 430 Oct 14 09:26 README.txt
+bandit33@bandit:~$ cat README.txt 
+Congratulations on solving the last level of this game!
+
+At this moment, there are no more levels to play in this game. However, we are constantly working
+on new levels and will most likely expand this game with more levels soon.
+Keep an eye out for an announcement on our usual communication channels!
+In the meantime, you could play some of our other wargames.
+
+If you have an idea for an awesome new level, please let us know!
+```
