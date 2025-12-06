@@ -1041,3 +1041,32 @@ remote:
 remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
 remote: 
 ```
+
+## Level 32 --> Level 33
+This is a good one again.
+
+We get another custom shell. And personally I kinda had to look into the solution online.
+
+There is an __uppercase shell__.
+
+What you can do is to break out of it somehow. 
+
+Refer to this link [Awesome Reddit thread on this.](https://www.reddit.com/r/hacking/comments/dxe2c2/bandit_level_32_explained_pls_overthewire/)
+
+In linux `$0` refers to the name of the shell. And when you look at this thread above and also experiment on your own, you would realise that the script is actually executing the command you gave after converting it into uppercase.
+
+You would see something like:
+```
+>> ls -l
+sh: 1: LS: Permission denied
+```
+
+Now you can see, it is executing the command, so giving `$0` would actually take you to the native `/bin/bash` shell, where you can execute the command.
+
+```
+>> $0
+$ cat /etc/bandit_pass/bandit33
+tQdtbs5D5i2vJwkO8mEyYEyTL8izoeJ0
+```
+
+__NOTE__: Another fantastics hack is to press `ctrl+C`, you'd go the script internal (in the binary form), and then `ctrl+C` again and you get to the native `/bin/bash` shell again.
