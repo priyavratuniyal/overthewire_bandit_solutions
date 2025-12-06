@@ -795,3 +795,295 @@ Now do, `:shell` and you'd see the bash shell.
 Here's a file, __bandit27-do__, and you'd see that the run permission of this file is special becuase it is something like this `-rws` for __bandit27__ user. 
 
 Use this to find the password like this: `./bandit27-do cat /etc/bandit_pass/bandit27`
+
+## Level 27 --> Level 28
+This level was rather simple, you just need to find out how to use the git url and clone the repo with the mentioned port.
+
+```
+priyavrat@bruno34:~$ cd /tmp/tmp.920atZ5XdD
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD$ git 
+clone ssh://bandit27-git@bandit.labs.overthewire.org:2220/home/bandit27-git/repo
+Cloning into 'repo'...                       
+
+                      This is an OverTheWire game server. 
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-1
+bandit27-git@bandit.labs.overthewire.org's password: 
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Receiving objects: 100% (3/3), done.
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD$ ls -ltr
+total 4
+drwxrwxr-x 3 priyavrat priyavrat 4096 Dec  2 19:53 repo
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD$ cd repo/
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ ls -ltr
+total 4
+-rw-rw-r-- 1 priyavrat priyavrat 68 Dec  2 19:53 README
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ cat README 
+The password to the next level is: Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN
+
+```
+
+
+## Level 28 --> Level 29
+We need two commands here, `git log` and `git show [commit_id]`.
+
+When you see the file we can see their is password, and then you see the git logs, then you can see a weird commit. Open that and you'll see that password.
+
+```
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ cat README.md 
+# Bandit Notes
+Some notes for level29 of bandit.
+
+## credentials
+
+- username: bandit29
+- password: xxxxxxxxxx
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ ls -ltr
+total 4
+-rw-rw-r-- 1 priyavrat priyavrat 111 Dec  2 19:58 README.md
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ git log
+commit b5ed4b5a3499533c2611217c8780e8ead48609f6 (HEAD -> master, origin/master, origin/HEAD)
+Author: Morla Porla <morla@overthewire.org>
+Date:   Tue Oct 14 09:26:24 2025 +0000
+
+    fix info leak
+
+commit 8b7c651b37ce7a94633b7b7b7c980ded19a16e4f
+Author: Morla Porla <morla@overthewire.org>
+Date:   Tue Oct 14 09:26:24 2025 +0000
+
+    add missing data
+
+commit 6d8e5e607602b597ade7504a550a29ba03f2cca0
+Author: Ben Dover <noone@overthewire.org>
+Date:   Tue Oct 14 09:26:24 2025 +0000
+
+    initial commit of README.md
+
+priyavrat@bruno34:/tmp/tmp.920atZ5XdD/repo$ git show 8b7c651b37ce7a94633b7b7b7c980ded19a16e4f
+commit 8b7c651b37ce7a94633b7b7b7c980ded19a16e4f
+Author: Morla Porla <morla@overthewire.org>
+Date:   Tue Oct 14 09:26:24 2025 +0000
+
+    add missing data
+
+diff --git a/README.md b/README.md
+index 7ba2d2f..d4e3b74 100644
+--- a/README.md
++++ b/README.md
+@@ -4,5 +4,5 @@ Some notes for level29 of bandit.
+ ## credentials
+ 
+ - username: bandit29
+-- password: <TBD>
++- password: 4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7
+
+```
+
+## Level 29 --> Level 30
+This level includes the concept of possiblity of different branches to a repo. In one of the repos you will find the password.
+
+```
+priyavrat@bruno34:~$ cd /tmp/tmp.ApQMbeTl8J
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J$ ls -ltra
+total 20
+drwxrwxrwt 21 root      root      12288 Dec  5 15:26 ..
+drwx------  3 priyavrat priyavrat  4096 Dec  5 15:26 .
+drwxrwxr-x  5 priyavrat priyavrat  4096 Dec  5 15:28 repo
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J$ cd repo
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git branch -a
+* (HEAD detached at origin/dev)
+  master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/dev
+  remotes/origin/master
+  remotes/origin/sploits-dev
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git checkout origin/dev
+HEAD is now at e50e6cc add data needed for development
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ ls -ltr
+total 12
+-rw-rw-r-- 1 priyavrat priyavrat  134 Dec  5 15:28 README.md
+drwxrwxr-x 2 priyavrat priyavrat 4096 Dec  5 15:28 exploits
+drwxrwxr-x 2 priyavrat priyavrat 4096 Dec  5 15:28 code
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ cat README.md 
+# Bandit Notes
+Some notes for bandit30 of bandit.
+
+## credentials
+
+- username: bandit30
+- password: qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL
+```
+
+## Level 30 --> Level 31
+This one contains concept of git __'tags'__
+
+```
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git branch
+* master
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git branch -a
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git log
+commit d604df2303c973b8e0565c60e4c29d3801445299 (HEAD -> master, origin/master, origin/HEAD)
+Author: Ben Dover <noone@overthewire.org>
+Date:   Tue Oct 14 09:26:28 2025 +0000
+
+    initial commit of README.md
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git tag
+secret
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git show secret
+fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy
+```
+
+## Level 31 --> Level 32
+This level require you to push a file, but take care of the `.gitignore` file as well.
+
+```
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ cat README.md 
+This time your task is to push a file to the remote repository.
+
+Details:
+    File name: key.txt
+    Content: 'May I come in?'
+    Branch: master
+
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ touch key.txt; echo "May I come in?" > key.txt
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ ls -ltr
+total 8
+-rw-rw-r-- 1 priyavrat priyavrat 147 Dec  6 12:18 README.md
+-rw-rw-r-- 1 priyavrat priyavrat  15 Dec  6 12:19 key.txt
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ cat key.txt 
+May I come in?
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ ls -ltra
+total 24
+drwx------ 3 priyavrat priyavrat 4096 Dec  6 12:18 ..
+-rw-rw-r-- 1 priyavrat priyavrat  147 Dec  6 12:18 README.md
+-rw-rw-r-- 1 priyavrat priyavrat    6 Dec  6 12:18 .gitignore
+-rw-rw-r-- 1 priyavrat priyavrat   15 Dec  6 12:19 key.txt
+drwxrwxr-x 3 priyavrat priyavrat 4096 Dec  6 12:19 .
+drwxrwxr-x 8 priyavrat priyavrat 4096 Dec  6 12:21 .git
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ cat .gitignore 
+*.txt
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ vim .gitignore
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ cat .gitignore 
+hello.txt
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .gitignore
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	key.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git add .
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git commit -m "whatever sucker" && git push
+[master 2ff44a8] whatever sucker
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+ create mode 100644 key.txt
+                        ..............................
+                      This is an OverTheWire game server. 
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-1
+bandit31-git@bandit.labs.overthewire.org's password: 
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 22 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (4/4), 352 bytes | 352.00 KiB/s, done.
+Total 4 (delta 0), reused 0 (delta 0), pack-reused 0
+remote: ### Attempting to validate files... ####
+remote: 
+remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+remote: 
+remote: Well done! Here is the password for the next level:
+remote: 3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K 
+remote: 
+remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+remote: 
+```
+
+## Level 32 --> Level 33
+This is a good one again.
+
+We get another custom shell. And personally I kinda had to look into the solution online.
+
+There is an __uppercase shell__.
+
+What you can do is to break out of it somehow. 
+
+Refer to this link [Awesome Reddit thread on this.](https://www.reddit.com/r/hacking/comments/dxe2c2/bandit_level_32_explained_pls_overthewire/)
+
+In linux `$0` refers to the name of the shell. And when you look at this thread above and also experiment on your own, you would realise that the script is actually executing the command you gave after converting it into uppercase.
+
+You would see something like:
+```
+>> ls -l
+sh: 1: LS: Permission denied
+```
+
+Now you can see, it is executing the command, so giving `$0` would actually take you to the native `/bin/bash` shell, where you can execute the command.
+
+```
+>> $0
+$ cat /etc/bandit_pass/bandit33
+tQdtbs5D5i2vJwkO8mEyYEyTL8izoeJ0
+```
+
+__NOTE__: Another fantastics hack is to press `ctrl+C`, you'd go the script internal (in the binary form), and then `ctrl+C` again and you get to the native `/bin/bash` shell again.
+
+
+## Level 33 --> Level 34 (Yeesss, we kinda completed the game for now!)
+```
+bandit33@bandit:~$ ls -ltr
+total 4
+-rw------- 1 bandit33 bandit33 430 Oct 14 09:26 README.txt
+bandit33@bandit:~$ cat README.txt 
+Congratulations on solving the last level of this game!
+
+At this moment, there are no more levels to play in this game. However, we are constantly working
+on new levels and will most likely expand this game with more levels soon.
+Keep an eye out for an announcement on our usual communication channels!
+In the meantime, you could play some of our other wargames.
+
+If you have an idea for an awesome new level, please let us know!
+```
