@@ -957,3 +957,87 @@ secret
 priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git show secret
 fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy
 ```
+
+## Level 31 --> Level 32
+This level require you to push a file, but take care of the `.gitignore` file as well.
+
+```
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ cat README.md 
+This time your task is to push a file to the remote repository.
+
+Details:
+    File name: key.txt
+    Content: 'May I come in?'
+    Branch: master
+
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ touch key.txt; echo "May I come in?" > key.txt
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ ls -ltr
+total 8
+-rw-rw-r-- 1 priyavrat priyavrat 147 Dec  6 12:18 README.md
+-rw-rw-r-- 1 priyavrat priyavrat  15 Dec  6 12:19 key.txt
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ cat key.txt 
+May I come in?
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ ls -ltra
+total 24
+drwx------ 3 priyavrat priyavrat 4096 Dec  6 12:18 ..
+-rw-rw-r-- 1 priyavrat priyavrat  147 Dec  6 12:18 README.md
+-rw-rw-r-- 1 priyavrat priyavrat    6 Dec  6 12:18 .gitignore
+-rw-rw-r-- 1 priyavrat priyavrat   15 Dec  6 12:19 key.txt
+drwxrwxr-x 3 priyavrat priyavrat 4096 Dec  6 12:19 .
+drwxrwxr-x 8 priyavrat priyavrat 4096 Dec  6 12:21 .git
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ cat .gitignore 
+*.txt
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ vim .gitignore
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ cat .gitignore 
+hello.txt
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .gitignore
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	key.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git add .
+
+priyavrat@bruno34:/tmp/tmp.ApQMbeTl8J/repo$ git commit -m "whatever sucker" && git push
+[master 2ff44a8] whatever sucker
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+ create mode 100644 key.txt
+                        ..............................
+                      This is an OverTheWire game server. 
+            More information on http://www.overthewire.org/wargames
+
+backend: gibson-1
+bandit31-git@bandit.labs.overthewire.org's password: 
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 22 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (4/4), 352 bytes | 352.00 KiB/s, done.
+Total 4 (delta 0), reused 0 (delta 0), pack-reused 0
+remote: ### Attempting to validate files... ####
+remote: 
+remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+remote: 
+remote: Well done! Here is the password for the next level:
+remote: 3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K 
+remote: 
+remote: .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+remote: 
+```
