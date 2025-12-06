@@ -1,11 +1,48 @@
 // === Configuration ===
-const NOTES_FILE = 'Level_Notes.md';
+const NOTES_FILE = 'content/Level_Notes.md';
 
 // === State ===
 let levels = [];
 let currentLevelIndex = -1;
 let unlockedLevels = new Set();
 let pendingLevelIndex = -1;
+
+function isMobileView() {
+    const widthMatch = window.matchMedia('(max-width: 768px)').matches || window.innerWidth <= 768;
+    const touchCapable = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const mobileAgent = /android|iphone|ipad|ipod|mobile/i.test(ua);
+    return widthMatch || (touchCapable && mobileAgent);
+}
+
+window.closeLockOverlay = closeLockOverlay;
+
+function closeLockOverlay() {
+    const overlay = document.querySelector('.content-overlay');
+    if (!overlay) return;
+    overlay.remove();
+
+    if (isMobileView()) {
+        const fallbackIndex = getLastUnlockedIndex();
+        if (fallbackIndex !== currentLevelIndex) {
+            loadLevel(fallbackIndex);
+        }
+        return;
+    }
+
+    const targetIndex = currentLevelIndex > 0 ? currentLevelIndex - 1 : 0;
+    if (targetIndex !== currentLevelIndex) {
+        loadLevel(targetIndex);
+    }
+}
+
+function getLastUnlockedIndex() {
+    if (!levels.length) return 0;
+    if (!unlockedLevels || unlockedLevels.size === 0) {
+        return 0;
+    }
+    return Math.max(...unlockedLevels);
+}
 
 // === Parse Markdown into Levels ===
 function parseMarkdown(markdown) {
@@ -124,18 +161,19 @@ function loadLevel(index) {
         <div class="level-content ${isLocked ? 'content-locked' : ''}">
             <h1>${level.title}</h1>
             <div class="level-meta">
-                <span class="level-badge">overthewire</span>
-                ${unlockedLevels.has(index) ? '<span class="level-badge" style="border-color: var(--accent-green); color: var(--accent-green);">level_complete</span>' : ''}
+                <span class="level-badge">OverTheWire</span>
+                ${unlockedLevels.has(index) ? '<span class="level-badge" style="border-color: #34c759; color: #34c759;">Completed</span>' : ''}
             </div>
             ${html}
         </div>
         ${isLocked ? `
             <div class="content-overlay">
                 <div class="unlock-prompt">
+                    <button class="overlay-close" onclick="closeLockOverlay()" aria-label="Close locked banner">×</button>
                     <div class="unlock-icon">🔒</div>
-                    <h2>_level_locked_</h2>
+                    <h2>Level Locked</h2>
                     <p>This level is locked. Please confirm you've attempted the previous level to view this content.</p>
-                    <button class="unlock-btn" onclick="showConsentModal(${index})">unlock level</button>
+                    <button class="unlock-btn" onclick="showConsentModal(${index})">Unlock Level</button>
                 </div>
             </div>
         ` : ''}
@@ -165,6 +203,7 @@ function showConsentModal(index) {
     pendingLevelIndex = index;
     const level = levels[index];
     const prevLevel = index > 0 ? levels[index - 1] : null;
+    const mobileView = isMobileView();
     
     const modal = document.getElementById('consent-modal');
     const message = document.getElementById('consent-message');
@@ -179,13 +218,19 @@ function showConsentModal(index) {
         
         // Dynamic placeholder based on actual levels
         if (prevLevelNum !== null && currentLevelNum !== null) {
-            input.placeholder = `I have cleared level ${prevLevelNum} and want to see level ${currentLevelNum}`;
+            input.placeholder = mobileView
+                ? `I have cleared level ${prevLevelNum}`
+                : `I have cleared level ${prevLevelNum} and want to see level ${currentLevelNum}`;
         } else {
-            input.placeholder = `I have cleared the previous level and want to see this level`;
+            input.placeholder = mobileView
+                ? `I have cleared the previous level`
+                : `I have cleared the previous level and want to see this level`;
         }
     } else {
         message.textContent = `To view contents of this level, please confirm you've attempted the previous level.`;
-        input.placeholder = `I have cleared the previous level and want to see this level`;
+        input.placeholder = mobileView
+            ? `I have cleared the previous level`
+            : `I have cleared the previous level and want to see this level`;
     }
     
     input.value = '';
@@ -224,7 +269,7 @@ function addCopyButtons() {
     codeBlocks.forEach(block => {
         const button = document.createElement('button');
         button.className = 'copy-btn';
-        button.textContent = 'copy';
+        button.textContent = 'Copy';
         button.setAttribute('aria-label', 'Copy code to clipboard');
         
         button.addEventListener('click', async () => {
@@ -233,11 +278,11 @@ function addCopyButtons() {
             
             try {
                 await navigator.clipboard.writeText(code.textContent);
-                button.textContent = 'copied!';
+                button.textContent = 'Copied';
                 button.classList.add('copied');
                 
                 setTimeout(() => {
-                    button.textContent = 'copy';
+                    button.textContent = 'Copy';
                     button.classList.remove('copied');
                 }, 2000);
             } catch (err) {
@@ -306,6 +351,7 @@ consentInput.addEventListener('input', (e) => {
     
     const level = levels[pendingLevelIndex];
     const prevLevel = pendingLevelIndex > 0 ? levels[pendingLevelIndex - 1] : null;
+    const mobileView = isMobileView();
     
     if (!prevLevel) {
         consentConfirm.disabled = true;
@@ -322,7 +368,11 @@ consentInput.addEventListener('input', (e) => {
         const hasLevel = value.includes('level');
         const hasWant = value.includes('want');
         const hasSee = value.includes('see');
-        consentConfirm.disabled = !(hasCleared && hasLevel && hasWant && hasSee);
+        if (mobileView) {
+            consentConfirm.disabled = !(hasCleared && hasLevel);
+        } else {
+            consentConfirm.disabled = !(hasCleared && hasLevel && hasWant && hasSee);
+        }
         return;
     }
     
@@ -330,31 +380,38 @@ consentInput.addEventListener('input', (e) => {
     const hasCleared = value.includes('cleared') || value.includes('clear');
     const hasWant = value.includes('want');
     const hasSee = value.includes('see');
-    
+
     // Check if the input contains the correct level numbers
     const hasPrevLevel = value.includes(`level ${prevLevelNum}`);
     const hasCurrentLevel = value.includes(`level ${currentLevelNum}`);
-    
-    const isValid = hasCleared && hasWant && hasSee && hasPrevLevel && hasCurrentLevel;
-    
+
+    let isValid;
+    if (mobileView) {
+        isValid = hasCleared && hasPrevLevel;
+    } else {
+        isValid = hasCleared && hasWant && hasSee && hasPrevLevel && hasCurrentLevel;
+    }
+
     consentConfirm.disabled = !isValid;
 });
 
 // Handle consent confirmation
 consentConfirm.addEventListener('click', () => {
     if (pendingLevelIndex >= 0) {
-        unlockedLevels.add(pendingLevelIndex);
+        const levelToLoad = pendingLevelIndex;
+        
+        unlockedLevels.add(levelToLoad);
         saveUnlockedLevels();
         
         // Update TOC to remove locked state
-        updateTOCLockState(pendingLevelIndex);
+        updateTOCLockState(levelToLoad);
         
         // Re-enable scrolling
         const mainContent = document.querySelector('.main-content');
         mainContent.style.overflow = 'auto';
         
         hideConsentModal();
-        loadLevel(pendingLevelIndex);
+        loadLevel(levelToLoad);
     }
 });
 
@@ -422,8 +479,19 @@ const toggleBtn = document.querySelector('.toggle-sidebar');
 const sidebar = document.querySelector('.sidebar');
 
 if (toggleBtn) {
+    toggleBtn.setAttribute('aria-expanded', 'true');
     toggleBtn.addEventListener('click', () => {
+        if (!isMobileView()) return;
         sidebar.classList.toggle('collapsed');
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        toggleBtn.setAttribute('aria-expanded', (!isCollapsed).toString());
+    });
+
+    window.addEventListener('resize', () => {
+        if (!isMobileView()) {
+            sidebar.classList.remove('collapsed');
+            toggleBtn.setAttribute('aria-expanded', 'true');
+        }
     });
 }
 
@@ -469,5 +537,52 @@ if (typeof marked !== 'undefined') {
     });
 }
 
+// Show about modal for first-time visitors
+function showAboutForFirstVisit() {
+    const hasVisited = localStorage.getItem('bandit_has_visited');
+    if (!hasVisited) {
+        setTimeout(() => {
+            aboutModal.classList.add('active');
+            localStorage.setItem('bandit_has_visited', 'true');
+        }, 2000);
+    }
+}
+
+// === Theme Toggle ===
+const themeToggle = document.getElementById('theme-toggle');
+
+function getPreferredTheme() {
+    const stored = localStorage.getItem('bandit_theme');
+    if (stored) return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('bandit_theme', theme);
+    themeToggle.checked = theme === 'dark';
+}
+
+function initTheme() {
+    const theme = getPreferredTheme();
+    setTheme(theme);
+}
+
+themeToggle.addEventListener('change', () => {
+    const next = themeToggle.checked ? 'dark' : 'light';
+    setTheme(next);
+});
+
+// Listen for system theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('bandit_theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+    }
+});
+
 // Start
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    init();
+    showAboutForFirstVisit();
+});

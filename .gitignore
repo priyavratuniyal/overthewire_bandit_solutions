@@ -6,31 +6,12 @@ Thumbs.db
 .vscode/
 .idea/
 *.code-workspace
-
-# Python cache
-__pycache__/
-*.py[cod]
-
-# Build / cache directories
-node_modules/
-dist/
-build/
-.cache/
-
-# Logs and temp
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-*.tmp
-
-# Cursor / project metadata
 .cursor/
 .history/
 
-# Local server artifacts
-*.pid
-*.lock
+# Logs and temp
+*.log
+*.tmp
 
-
-/extra
+# Sensitive data
+passwords.txt

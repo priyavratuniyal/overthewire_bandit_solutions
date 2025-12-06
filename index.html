@@ -3,27 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bandit • solutions</title>
+    <title>Bandit Solutions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
     <header class="header">
         <div class="header-left">
-            <h1 class="site-title">bandit <span class="dot">•</span> solutions <span class="dot">•</span> overthewire</h1>
+            <h1 class="site-title">Bandit Solutions</h1>
         </div>
         <nav class="header-right">
-            <a href="#" class="nav-link" id="about-link">about</a>
+            <a href="#" class="nav-link" id="about-link">About</a>
+            <label class="theme-switch" aria-label="Toggle theme">
+                <input type="checkbox" id="theme-toggle">
+                <span class="switch-slider">
+                    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </span>
+            </label>
         </nav>
     </header>
 
     <div class="main-container">
         <aside class="sidebar" id="toc">
             <div class="sidebar-header">
-                <h3>levels</h3>
-                <button class="toggle-sidebar" aria-label="Toggle sidebar">☰</button>
+                <h3>Levels</h3>
+                <button class="toggle-sidebar" aria-label="Toggle sidebar">
+                    <svg class="sidebar-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
             </div>
             <nav class="toc-list" id="toc-list">
                 <div class="loading">loading levels...</div>
@@ -33,7 +44,7 @@
         <main class="main-content">
             <article class="content-pane" id="content">
                 <div class="welcome">
-                    <h2>welcome</h2>
+                    <h2>Welcome</h2>
                     <p>Select a level from the sidebar to view the walkthrough.</p>
                     <p class="muted">Use <kbd>j</kbd>/<kbd>k</kbd> or arrow keys to navigate levels.</p>
                 </div>
@@ -49,7 +60,7 @@
     <div class="modal" id="about-modal">
         <div class="modal-content">
             <button class="modal-close" id="modal-close">&times;</button>
-            <h2>about</h2>
+            <h2>About</h2>
             <p>Personal writeups for OverTheWire Bandit wargame challenges. These notes focus on methodology and learning — all passwords and sensitive outputs are redacted.</p>
             <p class="muted">Built as a minimal static site for quick reference and study.</p>
         </div>
@@ -58,11 +69,11 @@
     <!-- Consent Modal -->
     <div class="modal" id="consent-modal">
         <div class="modal-content consent-content">
-            <h2>_level_consent_</h2>
+            <h2>Unlock Level</h2>
             <p class="consent-message" id="consent-message">To view this walkthrough, please confirm you've attempted the previous level.</p>
             
             <div class="consent-form">
-                <label for="consent-input" class="consent-label">type to confirm:</label>
+                <label for="consent-input" class="consent-label">Type to confirm</label>
                 <input 
                     type="text" 
                     id="consent-input" 
@@ -72,8 +83,8 @@
                     spellcheck="false"
                 />
                 <div class="consent-actions">
-                    <button class="consent-btn consent-cancel" id="consent-cancel">cancel</button>
-                    <button class="consent-btn consent-confirm" id="consent-confirm" disabled>unlock</button>
+                    <button class="consent-btn consent-cancel" id="consent-cancel">Cancel</button>
+                    <button class="consent-btn consent-confirm" id="consent-confirm" disabled>Unlock</button>
                 </div>
                 <p class="consent-note">This is an honor system. Please attempt each level before viewing solutions.</p>
             </div>
@@ -81,6 +92,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked@11.0.0/marked.min.js"></script>
-    <script src="script.js"></script>
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
